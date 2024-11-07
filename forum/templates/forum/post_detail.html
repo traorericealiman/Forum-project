@@ -2,7 +2,7 @@
 <div class="post-detail">
     <img src="{{ post.image.url }}" alt="Image du post" class="post-image">
     <h2>{{ post.title }}</h2>
-    <p><strong>Auteur:</strong> {{ post.user.username }}</p>
+    <p><strong>Auteur:</strong> {{ post.author.username }}</p>
     <p><strong>Publié le:</strong> {{ post.created_at|date:"d M Y" }}</p>
     <p>{{ post.content }}</p>
     <p><strong>Likes:</strong> {{ post.get_like_count }}</p>

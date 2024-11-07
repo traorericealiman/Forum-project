@@ -123,10 +123,6 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Si tu veux que Django recherche aussi dans d'autres dossiers (comme dans les apps), ajoute cette ligne
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Pour que Django puisse trouver le dossier static à la racine du projet
-]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
