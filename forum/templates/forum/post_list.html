@@ -1,0 +1,35 @@
+{% for post in posts %}
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <!-- Affichage de l'image du post -->
+            <a href="{% url 'post_detail' post.id %}">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" class="card-img-top" alt="Image du post" style="height: 200px; object-fit: cover;">
+                {% endif %}
+            </a>
+            
+            <div class="card-body">
+                <!-- Titre du post -->
+                <h5 class="card-title">
+                    <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+                </h5>
+                
+                <!-- Affichage du nom de l'auteur -->
+                <p class="card-text">
+                    <strong>Posté par:</strong> {{ post.user.username }}
+                </p>
+
+                <!-- Affichage du nombre de likes -->
+                <p class="card-text">
+                    <strong>Likes:</strong> {{ post.likes.count }}
+                </p>
+
+                <!-- Description courte du post -->
+                <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+
+                <!-- Lien vers le détail du post -->
+                <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">Lire plus</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}

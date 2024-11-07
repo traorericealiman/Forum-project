@@ -1,0 +1,32 @@
+<!-- forum/templates/forum/post_detail.html -->
+<div class="post-detail">
+    <img src="{{ post.image.url }}" alt="Image du post" class="post-image">
+    <h2>{{ post.title }}</h2>
+    <p><strong>Auteur:</strong> {{ post.user.username }}</p>
+    <p><strong>Publié le:</strong> {{ post.created_at|date:"d M Y" }}</p>
+    <p>{{ post.content }}</p>
+    <p><strong>Likes:</strong> {{ post.get_like_count }}</p>
+
+    <h3>Commentaires:</h3>
+    {% for comment in comments %}
+        <div class="comment">
+            <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+        </div>
+    {% endfor %}
+
+    <form method="POST" action="{% url 'add_comment' post.id %}">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Ajoutez un commentaire"></textarea>
+        <button type="submit">Commenter</button>
+    </form>
+
+    <form method="POST" action="{% url 'like_post' post.id %}">
+        {% csrf_token %}
+        <button type="submit">
+            {% if user in post.likes.all %}
+                Retirer le like
+            {% else %}
+                Aimer
+            {% endif %}
+        </button>
+</div>
