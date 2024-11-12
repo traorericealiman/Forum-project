@@ -5,23 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar a {
+            color: white !important;
+        }
+
+        .navbar a:hover {
+            color: #f8f9fa !important;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            border-radius: 15px 15px 0 0;
+            object-fit: cover;
+            height: 200px;
+        }
+
+        .card-body {
+            background-color: #ffffff;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .card-title a {
+            text-decoration: none;
+            color: #212529;
+        }
+
+        .card-title a:hover {
+            color: #007bff;
+        }
+
+        .icon-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .icon-container i {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .icon-container span {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+
+        .icon-container .like,
+        .icon-container .dislike {
+            transition: transform 0.2s ease;
+        }
+
+        .icon-container .like:hover,
+        .icon-container .dislike:hover {
+            transform: scale(1.2);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .navbar-toggler {
+            border-color: #007bff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #007bff;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
             <a class="navbar-brand" href="#">Forum</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    <li class="nav-item ms-3">
                         <a class="nav-link active" href="#">Accueil</a>
                     </li>
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-success text-green" href="{% url 'add_post' %}">Ajouter un post</a>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="">
+                            <i class="bi bi-chat"></i> Chat
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="">
+                            <i class="bi bi-bell"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="{% url 'profile' %}">
+                            <i class="bi bi-person-circle"></i> Profil
+                        </a>
+                    </li>                    
+                    <li class="nav-item ms-3">
+                        <a class="nav-link btn btn-success text-white" href="{% url 'add_post' %}">
+                            <i class="bi bi-plus-circle"></i> Ajouter un post
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
@@ -29,6 +141,7 @@
         </div>
     </nav>
 
+    <!-- Le reste du contenu du forum -->
     <div class="container mt-4">
         <div class="row">
             {% for post in posts %}
@@ -44,7 +157,26 @@
                             <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
                         </h5>
                         <p class="card-text">{{ post.content|truncatewords:20 }}</p>
-                        <a href="{% url 'post_detail' post.id %}" class="btn btn-primary btn-sm">Lire plus</a>
+
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'post_detail' post.id %}" class="btn btn-primary btn-sm">Lire plus</a>
+                        {% else %}
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Lire plus</button>
+                        {% endif %}
+
+                        <!-- Icônes Like et Dislike avec leurs nombres -->
+                        <div class="icon-container mt-2">
+                            <!-- Like -->
+                            <span class="like me-3">
+                                <i class="bi bi-hand-thumbs-up" style="color: #007bff;"></i>
+                                <span>{{ post.likes.count }}</span>
+                            </span>
+                             <!-- Dislike -->
+                            <span class="dislike">
+                                <i class="bi bi-hand-thumbs-down" style="color: #dc3545;"></i>
+                                <span>{{ post.dislikes.count }}</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,6 +184,26 @@
         </div>
     </div>
 
+    <!-- Modal de connexion -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Connexion requise</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Pour lire plus de contenu, veuillez vous connecter ou vous inscrire.
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'login' %}" class="btn btn-primary">Se connecter</a>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ajout du script Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

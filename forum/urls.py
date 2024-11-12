@@ -2,6 +2,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     path('', views.post_list, name='post_list'),
     path('post/<int:post_id>/', views.post_detail, name='post_detail'),
@@ -9,4 +10,11 @@ urlpatterns = [
     path('comment/<int:post_id>/', views.add_comment, name='add_comment'),
     path('comment/<int:comment_id>/add_reply/', views.add_reply, name='add_reply'),  # URL pour ajouter une réponse
     path('ajouter/', views.add_post, name='add_post'),
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup_view, name='signup'),
+    path('post/<int:post_id>/subscribe/', views.subscribe, name='subscribe'),
+    path('profile/', views.profile_view, name='profile'),
+
+
+
 ]
